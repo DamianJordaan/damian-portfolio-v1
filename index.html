@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Damian Jordaan | Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <h1 class="text-xl font-bold">Damian Jordaan</h1>
+      <div class="space-x-4">
+        <a href="#about" class="hover:text-blue-600">About</a>
+        <a href="#projects" class="hover:text-blue-600">Projects</a>
+        <a href="#contact" class="hover:text-blue-600">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="text-center py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+    <h2 class="text-4xl md:text-5xl font-bold mb-4">Hi, I'm Damian 👋</h2>
+    <p class="text-lg md:text-xl max-w-2xl mx-auto">
+      Computer Science Honours Student | Full Stack Developer | Problem Solver
+    </p>
+    <div class="mt-6 space-x-4">
+      <a href="https://github.com/DamianJordaan" target="_blank" class="bg-white text-blue-600 font-semibold px-5 py-2 rounded-full hover:bg-gray-200 transition">GitHub</a>
+      <a href="https://www.linkedin.com/in/damian-jordaan-748485181/" target="_blank" class="bg-blue-800 font-semibold px-5 py-2 rounded-full hover:bg-blue-900 transition">LinkedIn</a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="max-w-4xl mx-auto py-16 px-4">
+    <h3 class="text-3xl font-bold mb-6 text-center">About Me</h3>
+    <p class="text-lg leading-relaxed text-center">
+      I am a Computer Science Hons Student at the University of Pretoria. I can easily pick up new programming languages and adapt to new situations. I love to solve problems and be challenged by the work that I do and strive to learn more in the process.
+    </p>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="bg-gray-50 py-16 px-4">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-3xl font-bold mb-10 text-center">Projects</h3>
+      <div id="project-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Projects will be dynamically loaded here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="max-w-4xl mx-auto py-16 px-4 text-center">
+    <h3 class="text-3xl font-bold mb-6">Contact</h3>
+    <p class="text-lg mb-6">I'm open to collaborations, or just a friendly chat.</p>
+    <a href="mailto:dj.jordaan@outlook.com" class="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition">Email Me</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-300 py-6 text-center">
+    <p>© <span id="year"></span> Damian Jordaan. | <a href="https://nanonex.org/portfolio" target="_blank" class="hover:underline"></a></p>
+  </footer>
+
+  <!-- Script to load projects from GitHub -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    async function loadProjects() {
+      const response = await fetch('https://api.github.com/users/DamianJordaan/repos');
+      const repos = await response.json();
+      const container = document.getElementById('project-list');
+
+      repos
+        .filter(repo => !repo.fork)
+        .sort((a,b) => new Date(b.pushed_at) - new Date(a.pushed_at))
+        .slice(0, 6)
+        .forEach(repo => {
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-lg shadow-md p-5 flex flex-col justify-between';
+
+          card.innerHTML = `
+            <div>
+              <h4 class="text-xl font-bold mb-2">${repo.name}</h4>
+              <p class="text-gray-600 text-sm mb-4">${repo.description || 'No description provided.'}</p>
+            </div>
+            <a href="${repo.html_url}" target="_blank" class="mt-auto inline-block text-blue-600 font-semibold hover:underline">View on GitHub →</a>
+          `;
+          container.appendChild(card);
+        });
+    }
+    loadProjects();
+  </script>
+</body>
+</html>
